@@ -11,6 +11,7 @@ namespace StalkerME.DataStructures
 		List<U> values;
 
 		KeyNotFoundException keyNotFoundException;
+        ArgumentException KeyAlreadyExistException;
 
 		internal List<KeyValuePair<T,U>> pairList;
 
@@ -21,26 +22,8 @@ namespace StalkerME.DataStructures
 			values = new List<U> ();
 
 			keyNotFoundException = new KeyNotFoundException ("The given key was not present in the dictionary.");
-		}
-
-//		public delegate void DictionaryForeachHandler(T key, U value);
-//		
-//		public static void DictionaryForeach(ImprovedDictionary<T, U> improvedDictionary, DictionaryForeachHandler handler)
-//		{
-//			if (handler == null)
-//				throw new Exception ("字典 handler 不能为空");
-//
-//			var pairList = improvedDictionary.pairList;
-//
-//			for (int i = 0; i < improvedDictionary.Count; i++)
-//			{
-//				var pair = pairList [i];
-//				var key = pair.Key;
-//				var value = pair.Value;
-//
-//				handler (key, value);
-//			}
-//		}
+            KeyAlreadyExistException = new ArgumentException("An element with the same key already exists in the dictionary.");
+        }
 
 		public bool ContainsValue(U value)
 		{
@@ -64,6 +47,25 @@ namespace StalkerME.DataStructures
 
 			Add (item);
 		}
+
+        public void Put(T key, U value)
+        {
+            try
+            {
+                Add(key, value);
+            }
+            catch (ArgumentException exception)
+            {
+                if (exception.Equals(KeyAlreadyExistException))
+                {
+                    this[key] = value;
+                }
+                else
+                {
+                    throw exception;
+                }
+            }
+        }
 
 		public bool Remove (T key)
 		{
@@ -166,11 +168,9 @@ namespace StalkerME.DataStructures
 			var key = item.Key;
 			var value = item.Value;
 
-			//var isContainKey = (this as IDictionary<T, U>).ContainsKey (key);
-
 			if(ContainsKey (key))
 			{
-				throw new ArgumentException ("An element with the same key already exists in the dictionary.");
+				throw KeyAlreadyExistException;
 			}
 			else
 			{
@@ -263,41 +263,6 @@ namespace StalkerME.DataStructures
 
 				handler (key, value);
 			}
-//			if (handler == null)
-//				throw new Exception ("字典 handler 不能为空");
-//
-//			var keys = improvedDictionary.Keys as List<T>;
-//			var values = improvedDictionary.Values as List<U>;
-//
-//			for (int i = 0; i < improvedDictionary.Count; i++)
-//			{
-//				var key = keys [i];
-//				var value = values [i];
-//
-//				handler (key, value);
-//			}
-//
-////			var enumerator = dictionary.GetEnumerator();
-////
-////			try
-////			{
-////				while (enumerator.MoveNext())
-////				{
-////					var kvp = enumerator.Current;
-////					var key = kvp.Key;
-////					var value = kvp.Value;
-////
-////					handler(key, value);
-////				}
-////			}
-////			finally
-////			{
-////				var disposable = enumerator as IDisposable;
-////				if (disposable != null)
-////				{
-////					disposable.Dispose();
-////				}
-////			}
 		}
 	}
 }
