@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
-using System.Runtime.CompilerServices;
 
 namespace StalkerME.DataStructures
 {
@@ -39,7 +37,7 @@ namespace StalkerME.DataStructures
 
         public bool Contains(T key, U item)
         {
-            if (map.ContainsKey (key))
+            if (ContainsKey (key))
             {
                 var queue = GetIEnumerable(key);;
 
@@ -53,7 +51,7 @@ namespace StalkerME.DataStructures
 
         U GetOperation(T key, GetOperationTypeEnum readOperationType)
         {
-            if (map.ContainsKey (key))
+            if (ContainsKey (key))
             {
                 var queue = GetIEnumerable(key);;
 
@@ -71,16 +69,6 @@ namespace StalkerME.DataStructures
             {
                 throw new InvalidOperationException("Operation is not valid due to the current state of the object");
             }
-        }
-    }
-
-    public static class QueueDictionaryExpend
-    {
-        public static void QueueDictionaryForeach<T, U>(this QueueDictionary<T, U> queueDictionary, ImprovedDictionaryExpend.DictionaryForeachHandler<T, Queue<U>> handler)
-        {
-            var map = queueDictionary.map;
-
-            map.DictionaryForeach (handler);
         }
     }
 }

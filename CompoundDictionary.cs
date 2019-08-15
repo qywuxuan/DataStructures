@@ -10,27 +10,20 @@ namespace StalkerME.DataStructures
     /// U:ValueType
     /// V:IEnumerableType
     /// </summary>
-    public class CompoundDictionary<T, U, V> where V : class, IEnumerable<U>, new()
+    public class CompoundDictionary<T, U, V> : ImprovedDictionary<T, V> where V : class, IEnumerable<U>, new()
     {
-        public CompoundDictionary()
-        {
-            map = new ImprovedDictionary<T, V>();
-        }
-
-        protected internal ImprovedDictionary<T, V> map;
-
         protected V GetIEnumerable(T key)
         {
             V enumerable = null;
 
-            if (map.ContainsKey (key))
+            if (ContainsKey (key))
             {
-                enumerable = map[key];
+                enumerable = this[key];
             }
             else
             {
                 enumerable = new V();
-                map.Add (key, enumerable);
+                Add (key, enumerable);
             }
 
             return enumerable;
